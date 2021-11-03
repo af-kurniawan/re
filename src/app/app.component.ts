@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
 
 export interface PeriodicElement {
   name: string;
@@ -27,4 +29,15 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class AppComponent {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;}
+  dataSource = ELEMENT_DATA;
+  items: Observable<any[]>;
+
+  constructor(firestore: AngularFirestore) {
+    this.items =  firestore.collection('users').valueChanges();
+  }
+
+  ngOnInit() {
+    this.items.subscribe(res => console.log(res))
+  }
+
+}

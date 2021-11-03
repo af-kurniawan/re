@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "re-project-e68e3": {
+      "hosting": {
+        "re": [
+          "re-project-e68e3"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "re-project-e68e3"
+  }
+}
