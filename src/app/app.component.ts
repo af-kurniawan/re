@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { limit, orderBy, query } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 export interface PeriodicElement {
@@ -22,6 +23,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,15 +31,24 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class AppComponent {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  dataSource: any[] = [];
   items: Observable<any[]>;
 
   constructor(firestore: AngularFirestore) {
-    this.items =  firestore.collection('users').valueChanges();
+    this.items =  firestore.collection('listings', ref => ref.limit(10)).valueChanges();
   }
 
   ngOnInit() {
-    this.items.subscribe(res => console.log(res))
+    this.items.subscribe(res => {
+      console.log(res)
+      this.dataSource = res.map(r => {
+        return {
+          name: r.listing.propertyDetails.suburb,
+          weight: r.listing.propertyDetails.bedrooms,
+          symbol: r.listing.priceDetails.displayPrice,
+        }
+      })
+    })
   }
 
 }
